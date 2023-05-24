@@ -15,8 +15,80 @@
 
 		<link rel="stylesheet" href="./assets/css/style.css" />
 
-		<script src="./assets/js/main.js" defer></script>
+		<script src="./assets/js/main.js" type="module"></script>
 	</head>
 
-	<body></body>
+	<body>
+		<main class="wrapper">
+			<div class="app">
+				<section class="app__inputs">
+					<form action="" class="app__form">
+						<fieldset class="app__input-set" aria-invalid="false">
+							<label class="app__label" for="day">Day</label>
+							<input
+								class="app__input"
+								type="number"
+								placeholder="DD"
+								id="day"
+								min="1"
+								max="31"
+							/>
+							<p class="app__warning"></p>
+						</fieldset>
+
+						<fieldset class="app__input-set" aria-invalid="false">
+							<label class="app__label" for="month">Month</label>
+							<input
+								class="app__input"
+								type="number"
+								placeholder="MM"
+								id="month"
+								min="1"
+								max="12"
+							/>
+							<p class="app__warning"></p>
+						</fieldset>
+
+						<fieldset class="app__input-set" aria-invalid="false">
+							<label class="app__label" for="year">Year</label>
+							<input
+								class="app__input"
+								type="number"
+								placeholder="YYYY"
+								id="year"
+								min="0"
+							/>
+							<p class="app__warning"></p>
+						</fieldset>
+
+						<button class="app__btn">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46 44">
+								<g fill="none" stroke="#FFF" stroke-width="2">
+									<path
+										d="M1 22.019C8.333 21.686 23 25.616 23 44M23 44V0M45 22.019C37.667 21.686 23 25.616 23 44"
+									/>
+								</g>
+							</svg>
+						</button>
+					</form>
+				</section>
+				<section class="app__results">
+					<p class="app__result app-result">
+						<span data-result="year">--</span>
+						years
+					</p>
+
+					<p class="app__result app-result">
+						<span data-result="month">--</span>
+						months
+					</p>
+
+					<p class="app__result app-result">
+						<span data-result="day">--</span>
+						days
+					</p>
+				</section>
+			</div>
+		</main>
+	</body>
 </html>
