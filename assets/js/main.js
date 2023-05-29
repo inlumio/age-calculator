@@ -9,93 +9,90 @@ const dayResult = document.querySelector('[data-result="day"]');
 const monthResult = document.querySelector('[data-result="month"]');
 const yearResult = document.querySelector('[data-result="year"]');
 
+let setResults = (days, months, years) => {
+	dayResult.innerText = days;
+	monthResult.innerText = months;
+	yearResult.innerText = years;
+};
+
+let getDatesDifference = (starts) => {
+	return moment.preciseDiff(starts, moment.now(), true);
+};
+
+let checkDay = (dayInput) => {
+	let day = parseInt(dayInput.value);
+	if (isNaN(day)) {
+		return { isValid: false, errMessage: 'This field is required' };
+	}
+	if (day > 31 || day < 1) {
+		return { isValid: false, errMessage: 'Must be a valid day' };
+	}
+	return { isValid: true, errMessage: '' };
+};
+
+let checkMonth = (monthInput) => {
+	let month = parseInt(monthInput.value);
+	if (isNaN(month)) {
+		return { isValid: false, errMessage: 'This field is required' };
+	}
+	if (month > 12 || month < 1) {
+		return { isValid: false, errMessage: 'Must be a valid month' };
+	}
+	return { isValid: true, errMessage: '' };
+};
+
+let checkYear = (yearInput) => {
+	let year = parseInt(yearInput.value);
+	if (isNaN(year)) {
+		return { isValid: false, errMessage: 'This field is required' };
+	}
+	if (year > new Date().getFullYear()) {
+		return { isValid: false, errMessage: 'Must be in the past' };
+	}
+	return { isValid: true, errMessage: '' };
+};
+
+let fieldChecking = (field, checkFn) => {
+	let checkResult = checkFn(field);
+	setFieldsetValidity(field, checkResult.isValid, checkResult.errMessage);
+	return checkResult.isValid;
+};
+
+let setFieldsetValidity = (input, isValid, message) => {
+	input.closest('.app__input-set').setAttribute('aria-invalid', !isValid);
+	input.closest('.app__input-set').querySelector('.app__warning').innerText =
+		message;
+};
+
+let checkDate = function () {
+	let dayCheck = fieldChecking(dayInput, checkDay);
+	let monthCheck = fieldChecking(monthInput, checkMonth);
+	let yearCheck = fieldChecking(yearInput, checkYear);
+
+	if (!(dayCheck && monthCheck && yearCheck)) {
+		setResults('--', '--', '--');
+		return;
+	}
+
+	let dateMoment = moment({
+		year: yearInput.value,
+		month: monthInput.value - 1,
+		day: dayInput.value,
+	});
+
+	if (!dateMoment.isValid()) {
+		setFieldsetValidity(dayInput, false, 'Must be a valid date');
+		setFieldsetValidity(monthInput, false, '');
+		setFieldsetValidity(yearInput, false, '');
+		setResults('--', '--', '--');
+		return;
+	}
+
+	let diff = getDatesDifference(dateMoment);
+	setResults(diff.days, diff.months, diff.years);
+};
+
 button.addEventListener('click', (e) => {
 	e.preventDefault();
 	checkDate();
 });
-
-function checkDate() {
-	let now = new Date();
-	let dayChecking = checkInput(dayInput);
-	let monthChecking = checkInput(monthInput);
-	let yearChecking = checkInput(yearInput);
-	if (dayChecking && monthChecking && yearChecking) {
-		let enteredDate = new Date(
-			`${parseInt(yearInput.value)}-${parseInt(monthInput.value)}-${parseInt(
-				dayInput.value
-			)}`
-		);
-		const inputSets = document.querySelectorAll('.app__input-set');
-		const firsWaringField = document.querySelector('.app__warning');
-		if (!dateIsValid(enteredDate)) {
-			inputSets.forEach((inputSet) =>
-				inputSet.setAttribute('aria-invalid', true)
-			);
-			firsWaringField.innerText = 'Must be a valid date';
-		} else {
-			let date = new Date(
-				yearInput.value,
-				monthInput.value - 1,
-				dayInput.value
-			);
-			if (date > now) {
-				inputSets.forEach((inputSet) =>
-					inputSet.setAttribute('aria-invalid', true)
-				);
-				firsWaringField.innerText = 'Must be the past';
-			} else {
-				let diff = getDatesDifference(enteredDate);
-				dayResult.innerText = diff.days;
-				monthResult.innerText = diff.months;
-				yearResult.innerText = diff.years;
-			}
-		}
-	}
-}
-
-function getDatesDifference(starts) {
-	return moment.preciseDiff(starts, moment.now(), true);
-}
-
-function dateIsValid(date) {
-	return date instanceof Date && !isNaN(date);
-}
-
-function checkInput(input) {
-	const inputValue = parseInt(input.value);
-	const inputSet = input.closest('.app__input-set');
-	const errField = inputSet.querySelector('.app__warning');
-	const id = input.getAttribute('id');
-
-	if (isNaN(inputValue)) {
-		inputSet.setAttribute('aria-invalid', true);
-		errField.innerText = 'This field is required';
-		return false;
-	}
-
-	if (id === 'year') {
-		if (inputValue > new Date().getFullYear()) {
-			inputSet.setAttribute('aria-invalid', true);
-			errField.innerText = `Must be in the past`;
-			return false;
-		}
-
-		if (inputValue < input.getAttribute('min')) {
-			inputSet.setAttribute('aria-invalid', true);
-			errField.innerText = `Must be in A.D.`;
-			return false;
-		}
-	} else {
-		if (
-			inputValue < input.getAttribute('min') ||
-			inputValue > input.getAttribute('max')
-		) {
-			inputSet.setAttribute('aria-invalid', true);
-			errField.innerText = `Must be valid ${id}`;
-			return false;
-		}
-	}
-
-	inputSet.setAttribute('aria-invalid', false);
-	return true;
-}
