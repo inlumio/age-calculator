@@ -31,10 +31,8 @@ Users should be able to:
 
 ### Links
 
-- Solution URL:
-  [Add solution URL here](https://github.com/inlumio/age-calculator)
-- Live Site URL:
-  [Add live site URL here](https://inlumio.github.io/age-calculator/)
+- Solution URL: [GitHub repository](https://github.com/inlumio/age-calculator)
+- Live Site URL: [GitHub Pages](https://inlumio.github.io/age-calculator/)
 
 ## My process
 
